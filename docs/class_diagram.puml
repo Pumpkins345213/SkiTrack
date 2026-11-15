@@ -1,0 +1,36 @@
+
+@startuml SkiTrack
+allowmixing
+
+title SkiTrack - UML диаграма на класовете
+
+skinparam classAttributeIconSize 0
+
+class "Курорт" as Resort {
+    +id: Integer
+    +name: String
+    +mountain: String
+    +description: String
+    +image: String
+}
+
+class "Flask приложение" as FlaskApp {
+    +get_resorts()
+    +get_resort(id)
+    +create_resort()
+    +update_resort(id)
+    +delete_resort(id)
+}
+
+class "База данни" as Database {
+    +get_db_connection()
+}
+
+class "PostgreSQL" as PostgreSQL
+
+FlaskApp --> Resort : управлява
+FlaskApp --> Database : използва
+Database --> PostgreSQL : свързва се
+PostgreSQL --> Resort : съхранява данни
+
+@enduml

@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактиране на курорт | SkiTrack</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">⛷️ SkiTrack</a>
+            <div class="nav-links">
+                <a href="/">Начало</a>
+                <a href="/#resorts">Курорти</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="add-resort" class="container">
+            <h2>Редактиране на ски курорт</h2>
+
+            <form method="POST">
+                <div>
+                    <label for="name">Име на курорта</label>
+                    <input type="text" id="name" name="name"
+                           value="{{ resort[1] }}" required>
+                </div>
+
+                <div>
+                    <label for="mountain">Планина</label>
+                    <input type="text" id="mountain" name="mountain"
+                           value="{{ resort[2] }}" required>
+                </div>
+
+                <div>
+                    <label for="description">Описание</label>
+                    <textarea id="description"
+                              name="description">{{ resort[3] or '' }}</textarea>
+                </div>
+
+                <button type="submit">Запази промените</button>
+
+                <p>
+                    <a href="/#resorts">← Назад към курортите</a>
+                </p>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

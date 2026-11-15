@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkiTrack | Ски курорти в България</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">⛷️ SkiTrack</a>
+            <div class="nav-links">
+                <a href="/">Начало</a>
+                <a href="#resorts">Курорти</a>
+                <a href="#about">За проекта</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Открий България на ски!</h1>
+            <p>Разгледай най-красивите ски курорти и писти в България.</p>
+            <a href="#resorts" class="btn">Разгледай курортите</a>
+        </section>
+
+        <section id="resorts" class="container">
+            <h2>Популярни ски курорти</h2>
+            <div class="resort-grid">
+
+{% for resort in resorts %}
+<article class="resort-card">
+    <img
+        src="{{ url_for('static', filename='images/' ~ resort[4]) }}"
+        alt="Ски курорт {{ resort[1] }}"
+        class="resort-image"
+    >
+    <h3>{{ resort[1] }}</h3>
+    <p>{{ resort[2] }}</p>
+
+<a href="{{ url_for('edit_resort', resort_id=resort[0]) }}"
+   class="edit-btn">
+    ✏️ Редактирай
+</a>
+
+<form action="{{ url_for('delete_resort', resort_id=resort[0]) }}"
+      method="POST"
+      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този курорт?');">
+
+    <button type="submit" class="delete-btn">
+        🗑️ Изтрий
+    </button>
+</form>
+
+</article>
+{% endfor %}
+
+            </div>
+        </section>
+
+<section id="add-resort" class="container">
+    <h2>Добавяне на ски курорт</h2>
+    <form action="{{ url_for('add_resort') }}" method="POST">
+        <div>
+            <label for="name">Име на курорта</label>
+            <input type="text" id="name" name="name"
+                   placeholder="Например: Добринище" required>
+        </div>
+
+        <div>
+            <label for="mountain">Планина</label>
+            <input type="text" id="mountain" name="mountain"
+                   placeholder="Например: Пирин" required>
+        </div>
+
+        <div>
+            <label for="description">Описание</label>
+            <textarea id="description" name="description"
+                      placeholder="Кратко описание на курорта"></textarea>
+        </div>
+
+        <button type="submit" class="btn">Добави курорт</button>
+    </form>
+</section>
+
+        <section id="about" class="container">
+            <h2>За SkiTrack</h2>
+            <p>SkiTrack е информационна система за ски курорти
+            и писти в България.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 SkiTrack — България</p>
+    </footer>
+</body>
+</html>

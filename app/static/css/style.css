@@ -1,0 +1,277 @@
+
+:root {
+    --dark: #0b1930;
+    --blue: #1689e8;
+    --light: #f3f8ff;
+    --text: #24344a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: var(--text);
+    background: var(--light);
+}
+
+header {
+    background: var(--dark);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+nav {
+    max-width: 1150px;
+    margin: auto;
+    padding: 22px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 28px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: #76c9ff;
+}
+
+.hero {
+    min-height: 480px;
+    padding: 110px 25px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(
+        135deg,
+        #091a33,
+        #12528c,
+        #39a3e0
+    );
+}
+
+.hero h1 {
+    font-size: clamp(36px, 6vw, 60px);
+    margin: 0 0 20px;
+}
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 35px;
+}
+
+.btn {
+    display: inline-block;
+    background: white;
+    color: #12528c;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: #d7efff;
+    transform: translateY(-2px);
+}
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+    padding: 65px 25px;
+}
+
+.container h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+.resort-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+}
+
+.resort-card {
+    background: white;
+    border-radius: 16px;
+    padding: 35px 24px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border-top: 5px solid var(--blue);
+    transition: 0.2s;
+}
+
+.resort-card:hover {
+    transform: translateY(-5px);
+}
+
+.resort-card h3 {
+    font-size: 24px;
+    margin: 0 0 12px;
+    color: #12528c;
+}
+
+.resort-card p {
+    color: #65758b;
+    margin: 0;
+}
+
+footer {
+    background: var(--dark);
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+@media (max-width: 850px) {
+    .resort-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    nav {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .nav-links {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .resort-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        min-height: 380px;
+        padding: 90px 20px;
+    }
+}
+
+.resort-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    display: block;
+}
+
+/* Форма за добавяне на ски курорт */
+#add-resort {
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+#add-resort form {
+    max-width: 600px;
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+#add-resort form > div {
+    margin-bottom: 20px;
+}
+
+#add-resort label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #24344d;
+}
+
+#add-resort input,
+#add-resort textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font: inherit;
+}
+
+#add-resort textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+#add-resort button {
+    background: #1688e8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#add-resort button:hover {
+    background: #0868bd;
+}
+
+/* Бутони за редактиране и изтриване */
+
+.edit-btn,
+.delete-btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.edit-btn {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+}
+
+.edit-btn:hover {
+    background-color: #bbdefb;
+}
+
+.delete-btn {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.delete-btn:hover {
+    background-color: #ffcdd2;
+}
+
+.resort-card form {
+    margin-top: 10px;
+}
