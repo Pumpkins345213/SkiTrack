@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сравнение на курортите | SkiTrack</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<!-- Библиотека за интерактивната карта -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+</head>
+<body>
+   
+<main class="container compare-page">
+
+        <h1>Сравнение на ски курортите</h1>
+
+        <p>
+            Сравнете основните характеристики на българските
+            ски курорти на едно място.
+        </p>
+
+        <table class="ski-prices-table">
+            <thead>
+                <tr>
+                    <th>Курорт</th>
+                    <th>Планина</th>
+                    <th>Писти</th>
+                    <th>Лифтове</th>
+                    <th>Дневна карта</th>
+                    <th>Ски сезон</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resort in resorts %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('resort_details', resort_id=resort[0]) }}">
+                            {{ resort[1] }}
+                        </a>
+                    </td>
+                    <td>{{ resort[2] }}</td>
+                    <td>
+                        {% if resort[3] is not none %}
+                            около {{ resort[3]|int }} км
+                        {% else %}
+                            Няма данни
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if resort[4] is not none %}
+                            {{ resort[4] }}
+                        {% else %}
+                            Няма данни
+                        {% endif %}
+                    </td>
+
+<td>
+    {% if resort[7] is not none %}
+        <strong>{{ "%.2f"|format(resort[7]) }} €</strong>
+        <div><small>{{ resort[9] }}</small></div>
+        <div><small>Сезон: {{ resort[8] }}</small></div>
+    {% else %}
+        Няма данни
+    {% endif %}
+</td>
+
+                    <td>
+                        {% if resort[5] or resort[6] %}
+                            {{ resort[5] or 'Неуточнено' }} –
+                            {{ resort[6] or 'Неуточнено' }}
+                        {% else %}
+                            Зависи от снежните условия
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+<section class="compare-chart">
+    <h2>Дължина на ски пистите по курорти</h2>
+    <p>Приблизителна обща дължина на пистите в километри.</p>
+
+    <canvas id="slopesChart"></canvas>
+
+<h2>Брой лифтове по курорти</h2>
+<p>Общ брой лифтове и подемни съоръжения.</p>
+
+<canvas id="liftsChart"></canvas>
+
+<h2>Сравнение на цените на дневните ски карти</h2>
+<p>
+    Цени за възрастни в евро. Тарифите са от различни
+    сезони и са представени само с информационна цел.
+</p>
+
+<canvas id="pricesChart"></canvas>
+
+<h2>Карта на ски курортите в България</h2>
+<p>Разгледайте местоположението на курортите върху интерактивната карта.</p>
+
+<div id="resortsMap" style="height: 420px; width: 100%; border-radius: 12px;"></div>
+
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const slopesLabels = {{ resorts | map(attribute=1) | list | tojson }};
+    const slopesData = {{ resorts | map(attribute=3) | list | tojson }};
+
+    new Chart(document.getElementById('slopesChart'), {
+        type: 'bar',
+        data: {
+            labels: slopesLabels,
+            datasets: [{
+                label: 'Дължина на пистите (км)',
+                data: slopesData,
+                backgroundColor: '#2388e8',
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Километри'
+                    }
+                }
+            }
+        }
+    });
+
+const liftsData = {{ resorts | map(attribute=4) | list | tojson }};
+
+new Chart(document.getElementById('liftsChart'), {
+    type: 'bar',
+    data: {
+        labels: slopesLabels,
+        datasets: [{
+            label: 'Брой подемни съоръжения',
+            data: liftsData,
+            backgroundColor: '#16a6a0',
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { precision: 0 },
+                title: {
+                    display: true,
+                    text: 'Брой съоръжения'
+                }
+            }
+        }
+    }
+});
+
+const pricesData = {{ resorts | map(attribute=7) | list | tojson }};
+
+new Chart(document.getElementById('pricesChart'), {
+    type: 'bar',
+    data: {
+        labels: slopesLabels,
+        datasets: [{
+            label: 'Дневна ски карта (€)',
+            data: pricesData,
+            backgroundColor: '#f59e0b',
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.parsed.y.toFixed(2) + ' €';
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Цена (€)'
+                }
+            }
+        }
+    }
+});
+
+</script>
+
+<script>
+    // Интерактивна карта на България
+    const resortsMap = L.map('resortsMap').setView([42.7, 25.3], 7);
+
+    // Картографски слой от OpenStreetMap
+ 
+
+
+L.tileLayer('https://tiles.openfreemap.org/planet/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+}).addTo(resortsMap);
+
+
+
+
+    // Местоположение на ски курортите
+    const resortLocations = [
+        { name: 'Банско', lat: 41.84, lng: 23.49 },
+        { name: 'Боровец', lat: 42.27, lng: 23.60 },
+        { name: 'Пампорово', lat: 41.65, lng: 24.69 },
+        { name: 'Витоша', lat: 42.58, lng: 23.29 }
+    ];
+
+    resortLocations.forEach(resort => {
+        L.marker([resort.lat, resort.lng])
+            .addTo(resortsMap)
+            .bindPopup(`<strong>${resort.name}</strong>`);
+    });
+
+</script>
+
+
+        <p>
+            <small>
+                Информацията е ориентировъчна.
+                Работата на съоръженията и продължителността
+                на сезона зависят от метеорологичните условия.
+            </small>
+        </p>
+
+        <p><a href="{{ url_for('home') }}">← Назад към курортите</a></p>
+    </main>
+
+
+
+</body>
+</html>

@@ -27,6 +27,22 @@
 
         <section id="resorts" class="container">
             <h2>Популярни ски курорти</h2>
+
+<p>
+    <a href="{{ url_for('compare_resorts') }}" class="edit-btn">
+        📊 Сравни курортите
+    </a>
+</p>
+
+<div class="resort-search">
+    <input
+        type="search"
+        id="resortSearch"
+        placeholder="Търсене на курорт..."
+        aria-label="Търсене на ски курорт"
+    >
+</div>
+
             <div class="resort-grid">
 
 {% for resort in resorts %}
@@ -38,6 +54,12 @@
     >
     <h3>{{ resort[1] }}</h3>
     <p>{{ resort[2] }}</p>
+
+<a href="{{ url_for('resort_details', resort_id=resort[0]) }}"
+   class="edit-btn">
+    🔍 Виж подробности
+</a>
+
 
 <a href="{{ url_for('edit_resort', resort_id=resort[0]) }}"
    class="edit-btn">
@@ -94,5 +116,21 @@
     <footer>
         <p>© 2026 SkiTrack — България</p>
     </footer>
+
+<script>
+    // Търсене на курорти по име
+    const searchInput = document.getElementById('resortSearch');
+    const resortCards = document.querySelectorAll('.resort-card');
+
+    searchInput.addEventListener('input', function () {
+        const searchText = this.value.toLocaleLowerCase('bg').trim();
+
+        resortCards.forEach(card => {
+            const resortName = card.querySelector('h3').textContent.toLocaleLowerCase('bg');
+            card.style.display = resortName.includes(searchText) ? '' : 'none';
+        });
+    });
+</script>
+
 </body>
 </html>

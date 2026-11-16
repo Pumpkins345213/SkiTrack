@@ -23,6 +23,100 @@ def home():
 
     return render_template("index.html", resorts=resorts)
 
+@app.route("/compare")
+def compare_resorts():
+    with get_db_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                
+SELECT
+    r.id,
+    r.name,
+    r.mountain,
+    r.slopes_km,
+    r.lifts_count,
+    r.season_start,
+    r.season_end,
+    p.price_eur,
+    p.season,
+    p.pass_type
+FROM resorts r
+LEFT JOIN LATERAL (
+    SELECT price_eur, season, pass_type
+    FROM ski_pass_prices
+    WHERE resort_id = r.id
+      AND visitor_category = CASE
+          WHEN r.name = 'Боровец' THEN 'Възрастни 23–64 г.'
+          WHEN r.name = 'Пампорово' THEN 'Възрастни 22–64 г.'
+          ELSE 'Възрастни'
+      END
+      AND pass_type = CASE
+          WHEN r.name = 'Пампорово' THEN 'Цял ден Select'
+          WHEN r.name = 'Витоша' THEN 'Алеко – 1 ден'
+          ELSE 'Цял ден'
+      END
+    ORDER BY id DESC
+    LIMIT 1
+) p ON TRUE
+WHERE r.name IN ('Банско', 'Боровец', 'Пампорово', 'Витоша')
+ORDER BY r.name
+
+            """)
+            resorts = cursor.fetchall()
+
+    return render_template("compare.html", resorts=resorts)
+
+
+
+@app.route("/resorts/<int:resort_id>")
+def resort_details(resort_id):
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+            
+                
+SELECT id, name, mountain, description, image,
+       ski_pass_price, slopes_km, lifts_count,
+       season_start, season_end, difficulty,
+       price_season, info_source,
+       half_day_price, night_ski_price,
+       price_validity, lifts_info, official_website,
+       slopes_count, blue_slopes, red_slopes,
+      
+       black_slopes, longest_descent_km,
+       cross_country_km
+FROM resorts
+WHERE id = %s
+
+
+
+                """,
+                (resort_id,)
+            )
+            resort = cur.fetchone()
+
+    if resort is None:
+        return "Курортът не е намерен.", 404
+
+   
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT visitor_category, pass_type, price_eur,
+                       season, valid_from, valid_to
+                FROM ski_pass_prices
+                WHERE resort_id = %s
+                ORDER BY id
+            """, (resort_id,))
+            ski_pass_prices = cur.fetchall()
+
+    return render_template(
+        "resort_details.html",
+        resort=resort,
+        ski_pass_prices=ski_pass_prices
+    )
+
 
 @app.route("/resorts/add", methods=["POST"])
 def add_resort():

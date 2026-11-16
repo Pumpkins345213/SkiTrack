@@ -275,3 +275,106 @@ footer {
 .resort-card form {
     margin-top: 10px;
 }
+
+/* Таблица с цени на ски карти */
+.ski-prices-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.ski-prices-table th,
+.ski-prices-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #d5deea;
+    vertical-align: top;
+}
+
+.ski-prices-table th {
+    background-color: #e8f0fa;
+}
+
+.ski-prices-table td:last-child {
+    white-space: nowrap;
+}
+
+/* Страница сравнения курортов */
+.compare-page {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 35px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(20, 50, 90, 0.08);
+}
+
+.compare-page h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: #17365d;
+}
+
+.compare-page > p {
+    color: #53657a;
+    line-height: 1.6;
+}
+
+.compare-page .ski-prices-table {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.compare-page .ski-prices-table th {
+    background: #dceafa;
+    color: #17365d;
+}
+
+.compare-page .ski-prices-table tbody tr:hover {
+    background: #f0f6ff;
+}
+
+.compare-page .ski-prices-table a {
+    color: #1763aa;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.compare-page .ski-prices-table a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .compare-page {
+        margin: 20px 12px;
+        padding: 20px;
+        overflow-x: auto;
+    }
+}
+
+/* Търсене на ски курорти */
+.resort-search {
+    margin: 25px 0;
+    max-width: 450px;
+}
+
+.resort-search input {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 16px;
+    border: 2px solid #d5e3f2;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #17365d;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.resort-search input:focus {
+    border-color: #2388e8;
+    box-shadow: 0 0 0 4px rgba(35, 136, 232, 0.12);
+}
+
+.resort-search input::placeholder {
+    color: #8294a8;
+}

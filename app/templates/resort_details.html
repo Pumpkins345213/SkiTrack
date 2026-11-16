@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ resort[1] }} | SkiTrack</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="/" class="logo">⛷ SkiTrack</a>
+            <div class="nav-links">
+                <a href="/">Начало</a>
+                <a href="/#resorts">Курорти</a>
+                <a href="/#about">За проекта</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="container">
+            <h1>{{ resort[1] }}</h1>
+
+            <img
+                src="{{ url_for('static', filename='images/' ~ resort[4]) }}"
+                alt="Ски курорт {{ resort[1] }}"
+                class="resort-image"
+            >
+
+            <h2>Информация за курорта</h2>
+
+            <p><strong>Планина:</strong> {{ resort[2] }}</p>
+
+            <h3>Описание</h3>
+            <p>{{ resort[3] }}</p>
+
+
+{% if resort[18] is not none %}
+    <h2>Ски писти</h2>
+
+    <p><strong>Общ брой писти:</strong> {{ resort[18] }}</p>
+
+    <p>
+        <strong>🔵 Сини писти (лесни):</strong>
+        {{ resort[19] }}
+    </p>
+
+    <p>
+        <strong>🔴 Червени писти (средни):</strong>
+        {{ resort[20] }}
+    </p>
+
+    <p>
+        <strong>⚫ Черни писти (трудни):</strong>
+        {{ resort[21] }}
+    </p>
+
+    {% if resort[22] is not none %}
+        <p>
+            <strong>Най-дълго непрекъснато спускане:</strong>
+            {{ resort[22] }} км
+        </p>
+    {% endif %}
+{% endif %}
+
+<h2>Характеристики на курорта</h2>
+
+
+{% if resort[23] is not none %}
+    <p>
+        <strong>Писти за ски бягане:</strong>
+        {{ resort[23]|int }} км
+    </p>
+{% endif %}
+
+
+
+{% if ski_pass_prices %}
+    <h2>Цени по категории — сезон {{ ski_pass_prices[0][3] }}</h2>
+
+   
+<p>
+   
+{% if resort[1] == 'Витоша' %}
+    Посочените тарифи са с информационна цел. Сезонните карти са по ценоразпис за сезон 2025/2026, а периодът на валидност на останалите тарифи не е уточнен.
+{% else %}
+    Посочените цени са за сезон {{ ski_pass_prices[0][3] }}.
+{% endif %}
+
+    Проверете актуалните тарифи и условия на официалния сайт на курорта.
+</p>
+
+
+
+<table class="ski-prices-table">
+    <thead>
+        <tr>
+            <th>Категория</th>
+            <th>Вид карта</th>
+            <th>Цена</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for price in ski_pass_prices %}
+            <tr>
+                <td>{{ price[0] }}</td>
+                <td>{{ price[1] }}</td>
+                <td>
+                    {% if price[2] is not none %}
+                        {{ "%.2f"|format(price[2]) }} €
+                    {% else %}
+                        Няма данни
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<p>
+   
+{% if resort[1] == 'Банско' %}
+    <p>
+        <small>
+            * За деца до 6,99 г. и пенсионери от 75 г.
+            е посочена преференциална цена.
+            Условията за ползване и необходимите документи
+            се проверяват на официалния сайт на курорта.
+        </small>
+    </p>
+{% endif %}
+
+</p>
+
+
+
+    
+{% if resort[1] == 'Банско' %}
+    <p><small>Половин ден: след 12:30 ч. за Банско.</small></p>
+{% endif %}
+
+{% if resort[1] == 'Боровец' %}
+    <p>
+        <small>
+            <strong>Нощно каране:</strong>
+            от 18:30 до 22:00 ч., от сряда до събота,
+            при подходящи условия и работеща нощна зона.
+            Проверете актуалното работно време на
+            официалния сайт на курорта.
+        </small>
+    </p>
+{% endif %}
+
+{% if resort[1] == 'Пампорово' %}
+    <p>
+        <small>
+            <strong>Важно за картите Select:</strong>
+            Цените са за сезон 2026/2027.
+            Картите се закупуват онлайн, без предварително
+            избрана дата, и дават достъп до работещите
+            съоръжения в ски зона Пампорово.
+        </small>
+    </p>
+
+    <p>
+        <small>
+            <strong>Неделя сутрин Select:</strong>
+            важи само в неделя от 08:45 до 12:45 ч.
+            Проверете актуалните условия на официалния сайт.
+        </small>
+    </p>
+{% endif %}
+
+{% endif %}
+
+
+{% if resort[16] %}
+    <h2>Ски лифтове</h2>
+
+    {% for group in resort[16].split(';') %}
+        {% set parts = group.strip().split(':', 1) %}
+
+        {% if parts|length == 2 %}
+            <h3>{{ parts[0] }}</h3>
+            <p>{{ parts[1].strip().split(', ')|join(', ') }}</p>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+
+{% if resort[17] %}
+    <p>
+        <a href="{{ resort[17] }}" target="_blank"
+           rel="noopener noreferrer" class="btn">
+            🌐 Официален сайт на курорта
+        </a>
+    </p>
+{% endif %}
+
+
+{% if resort[8] or resort[9] %}
+    <h3>Ски сезон</h3>
+    <p>
+        {% if resort[8] %}
+            <strong>Начало:</strong> {{ resort[8] }}
+        {% endif %}
+        {% if resort[9] %}
+            <strong>Край:</strong> {{ resort[9] }}
+        {% endif %}
+    </p>
+
+{% else %}
+    <h3>Сезон</h3>
+    <p>
+        Началото и краят на сезона зависят от снежните и
+        метеорологичните условия. Проверете актуалната
+        информация на официалния сайт на курорта.
+    </p>
+{% endif %}
+
+
+{% if resort[6] is not none %}
+    <p><strong>Обща дължина на пистите:</strong> около {{ resort[6]|int }} км</p>
+{% endif %}
+
+{% if resort[7] is not none %}
+    
+<p>
+    <strong>
+        {% if resort[1] == 'Пампорово' %}
+            Брой лифтове и лентови транспортьори:
+        {% else %}
+            Брой лифтове:
+        {% endif %}
+    </strong>
+    {{ resort[7] }}
+</p>
+
+{% endif %}
+
+{% if resort[10] %}
+    <p><strong>Подходящ за:</strong> {{ resort[10] }}</p>
+{% endif %}
+
+
+
+{% if resort[12] %}
+    <p>
+        <strong>Източник:</strong>
+        <a href="{{ resort[12] }}" target="_blank" rel="noopener noreferrer">
+            Официална информация
+        </a>
+    </p>
+{% endif %}
+
+
+            <a href="/#resorts" class="btn">
+                ← Назад към курортите
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 SkiTrack – България</p>
+    </footer>
+
+</body>
+</html>
